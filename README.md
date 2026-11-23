@@ -1,36 +1,40 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# PixelShift
 
-## Getting Started
+PixelShift converts images locally in your browser. Select multiple images, choose PNG, JPG, WebP, AVIF, GIF, BMP, TIFF, ICO, SVG, or PDF output, tune quality where the format supports it, and download files individually or as a ZIP. No image data is uploaded.
 
-First, run the development server:
+The **Resize** page at `/resize` applies one custom size or preset to a batch of images. You can preserve each image's aspect ratio and download resized files individually or together as a ZIP.
+
+## Requirements
+
+- Node.js 20.9 or newer
+- npm
+
+## Setup
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+For a production build:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run build
+npm run start
+```
 
-## Learn More
+## Usage
 
-To learn more about Next.js, take a look at the following resources:
+1. Drop images into the upload area or choose files. You can add up to 50 images.
+2. Choose an output format from the format panel. HEIC is shown as unavailable because browsers do not provide a built-in HEIC encoder.
+3. Adjust quality from 1 to 100 (default: 82). PNG is lossless, so its output ignores the quality setting.
+4. Select **Convert**. Each image is processed independently.
+5. Download a converted image from its row or download all completed images together as a ZIP.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+When PDF is selected, **Download all as one PDF** creates a single multi-page PDF directly from the readable selected images.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Common input formats such as PNG, JPEG, GIF, BMP, TIFF, AVIF, and WebP are accepted when the browser can decode them. AVIF output depends on browser canvas encoding support. SVG output embeds the raster image in an SVG wrapper; PDF output creates a single-page image document; ICO embeds a PNG icon. Animated inputs are converted from the frame exposed by the browser's image decoder.
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+The output keeps each original filename and replaces its extension with the selected format's extension. Dark and light themes are available; the selected theme is saved in local browser storage. All image processing uses browser APIs and stays on the user's device.
