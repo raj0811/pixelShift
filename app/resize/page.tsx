@@ -32,7 +32,7 @@ function zipFiles(files: { name: string; blob: Blob }[]) {
       const dir = new Uint8Array(46 + entry.name.length); const dv = new DataView(dir.buffer); u32(dv, 0, 0x02014b50); u16(dv, 4, 20); u16(dv, 6, 20); u16(dv, 8, 0x0800); u32(dv, 16, checksum); u32(dv, 20, entry.data.length); u32(dv, 24, entry.data.length); u16(dv, 28, entry.name.length); u32(dv, 42, offset); dir.set(entry.name, 46); central.push(dir); offset += local.length + entry.data.length;
     }
     const size = central.reduce((total, part) => total + part.length, 0); const end = new Uint8Array(22); const ev = new DataView(end.buffer); u32(ev, 0, 0x06054b50); u16(ev, 8, entries.length); u16(ev, 10, entries.length); u32(ev, 12, size); u32(ev, 16, offset);
-    return new Blob([...locals, ...central, end], { type: "application/zip" });
+    return new Blob([...locals, ...central, end].map(part => part.slice().buffer as ArrayBuffer), { type: "application/zip" });
   });
 }
 

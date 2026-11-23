@@ -129,7 +129,7 @@ async function buildPdf(pages: { blob: Blob; width: number; height: number }[]) 
   }
   const xrefOffset = length;
   add(ascii(`xref\n0 ${objectCount}\n0000000000 65535 f \n${offsets.slice(1).map(offset => `${String(offset).padStart(10, "0")} 00000 n \n`).join("")}trailer\n<< /Size ${objectCount} /Root 1 0 R >>\nstartxref\n${xrefOffset}\n%%EOF`));
-  return new Blob(parts, { type: "application/pdf" });
+  return new Blob(parts.map(part => part.slice().buffer as ArrayBuffer), { type: "application/pdf" });
 }
 
 async function encodeExtra(canvas: HTMLCanvasElement, format: Format, quality: number): Promise<Blob> {
@@ -164,7 +164,7 @@ function makeZip(files: { name: string; blob: Blob }[]) {
     }
     const centralSize = central.reduce((sum, entry) => sum + entry.length, 0);
     const end = new Uint8Array(22); const ev = new DataView(end.buffer); put32(ev, 0, 0x06054b50); put16(ev, 8, entries.length); put16(ev, 10, entries.length); put32(ev, 12, centralSize); put32(ev, 16, offset);
-    return new Blob([...chunks, ...central, end], { type: "application/zip" });
+    return new Blob([...chunks, ...central, end].map(part => part.slice().buffer as ArrayBuffer), { type: "application/zip" });
   });
 }
 
